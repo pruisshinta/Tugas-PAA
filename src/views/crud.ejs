@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Karyawan</title>
+    <!-- Tambahkan stylesheet dari Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Data Karyawan</h1>
+        <table id="table-karyawan" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Umur</th>
+                    <th>Alamat</th>
+                    <th>Jabatan</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data karyawan akan ditampilkan di sini -->
+            </tbody>
+        </table>
+    </div>
+    <!-- Tambahkan script dari jQuery dan Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Tambahkan script JavaScript untuk menampilkan data karyawan -->
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "/getDataKaryawan",
+                type: "GET",
+                success: function(data) {
+                    // Looping data karyawan dan tambahkan ke dalam tabel
+                    $.each(data, function(index, karyawan) {
+                        $("#table-karyawan tbody").append(`
+                            <tr>
+                                <td>${karyawan.karyawan_id}</td>
+                                <td>${karyawan.karyawan_nama}</td>
+                                <td>${karyawan.karyawan_umur}</td>
+                                <td>${karyawan.karyawan_alamat}</td>
+                                <td>${karyawan.karyawan_jabatan}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-edit" data-id="${karyawan.karyawan_id}">Edit</button>
+                                    <button class="btn btn-danger btn-delete" data-id="${karyawan.karyawan_id}">Delete</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+        const table = document.getElementById('data-table');
+
+function getData() {
+  fetch('/api/karyawan') // Ganti dengan endpoint API Anda
+    .then(response => response.json())
+    .then(data => {
+      // Menambahkan baris ke tabel untuk setiap data yang diterima
+      data.forEach(rowData => {
+        const row = table.insertRow();
+        const idCell = row.insertCell();
+        idCell.textContent = rowData.karyawan_id;
+        const namaCell = row.insertCell();
+        namaCell.textContent = rowData.karyawan_nama;
+        const umurCell = row.insertCell();
+        umurCell.textContent = rowData.karyawan_umur;
+        const alamatCell = row.insertCell();
+        alamatCell.textContent = rowData.karyawan_alamat;
+        const jabatanCell = row.insertCell();
+        jabatanCell.textContent = rowData.karyawan_jabatan;
+      });
+    })
+    .catch(error => console.error(error));
+}
+
+getData();
+    </script>
+
+<script>
+        $(function() {
+            $('input[type="email"], input[type="password"], input[type="text"]').on('focus', function() {
+                $(this).animate({
+                    width: '+=50px',
+                    marginLeft: '-=25px'
+                }, 300);
+            }).on('blur', function() {
+                $(this).animate({
+                    width: '-=50px',
+                    marginLeft: '+=25px'
+                }, 300);
+            });
+        });
+    </script>
+    <style>
+        body {
+        padding-top: 70px;
+        }
+        .navbar-custom {
+            background-color: hwb(0 20% 80%);
+        }
+
+
+    </style>
+</body>
+</html>
